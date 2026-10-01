@@ -39,4 +39,5 @@
   <include file="changelog-6.15.0.xml" relativeToChangelogFile="true" />
   <include file="changelog-position.xml" relativeToChangelogFile="true" />
 
+
 </databaseChangeLog>
