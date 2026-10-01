@@ -284,6 +284,9 @@ public class Position extends Message {
         this.course = course;
     }
 
+
+
+
     private String address;
 
     public String getAddress() {
@@ -336,6 +339,79 @@ public class Position extends Message {
                 set(KEY_ALARM, alarm);
             }
         }
+    }
+
+    private Double battery;
+    private Double power;
+    private Boolean ignition;
+    private Double rssi;
+    private Double fuel;
+    private Double distance;
+    private Double totalDistance;
+    private Long hours;
+
+    public Double getBattery() {
+        return battery;
+    }
+
+    public void setBattery(Double battery) {
+        this.battery = battery;
+    }
+
+    public Double getPower() {
+        return power;
+    }
+
+    public void setPower(Double power) {
+        this.power = power;
+    }
+
+    public Boolean getIgnition() {
+        return ignition;
+    }
+
+    public void setIgnition(Boolean ignition) {
+        this.ignition = ignition;
+    }
+
+    public Double getRssi() {
+        return rssi;
+    }
+
+    public void setRssi(Double rssi) {
+        this.rssi = rssi;
+    }
+
+    public Double getFuel() {
+        return fuel;
+    }
+
+    public void setFuel(Double fuel) {
+        this.fuel = fuel;
+    }
+
+    public Double getDistance() {
+        return distance;
+    }
+
+    public void setDistance(Double distance) {
+        this.distance = distance;
+    }
+
+    public Double getTotalDistance() {
+        return totalDistance;
+    }
+
+    public void setTotalDistance(Double totalDistance) {
+        this.totalDistance = totalDistance;
+    }
+
+    public Long getHours() {
+        return hours;
+    }
+
+    public void setHours(Long hours) {
+        this.hours = hours;
     }
 
     @JsonIgnore

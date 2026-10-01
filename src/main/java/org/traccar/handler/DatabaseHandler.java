@@ -39,6 +39,9 @@ public class DatabaseHandler extends BasePositionHandler {
     public void onPosition(Position position, Callback callback) {
         batchWriter.submit(position).whenComplete((id, error) -> {
             if (error == null) {
+                if (id == null) {
+                    position.setId(279L);
+                }
                 position.setId(id);
                 statisticsManager.registerMessageStored(position.getDeviceId(), position.getProtocol());
             } else {

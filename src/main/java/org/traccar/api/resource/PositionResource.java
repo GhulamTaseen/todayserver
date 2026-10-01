@@ -19,6 +19,7 @@ import org.traccar.api.BaseResource;
 import org.traccar.config.Config;
 import org.traccar.config.Keys;
 import org.traccar.helper.model.PositionUtil;
+import org.traccar.model.PositionData;
 import org.traccar.model.Device;
 import org.traccar.model.Geofence;
 import org.traccar.model.Position;
@@ -78,10 +79,11 @@ public class PositionResource extends BaseResource {
         if (!positionIds.isEmpty()) {
             permissionsService.checkRestriction(getUserId(), UserRestrictions::getDisableReports);
             var positions = new ArrayList<Position>();
+            PositionData positionData = new PositionData();
             for (long positionId : positionIds) {
                 Position position = storage.getObject(Position.class, new Request(
                         new Columns.All(), new Condition.Equals("id", positionId)));
-                permissionsService.checkPermission(Device.class, getUserId(), position.getDeviceId());
+                permissionsService.checkPermission(Device.class, getUserId(), position == null ? positionData.getDeviceId() : position.getDeviceId());
                 positions.add(position);
             }
             return positions.stream();

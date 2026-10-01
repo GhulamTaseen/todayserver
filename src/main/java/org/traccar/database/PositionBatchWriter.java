@@ -19,13 +19,17 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.traccar.config.Config;
 import org.traccar.config.Keys;
+import org.traccar.model.AttributeMap;
 import org.traccar.model.Position;
 import org.traccar.storage.Storage;
 import org.traccar.storage.StorageException;
 import org.traccar.storage.query.Columns;
+import org.traccar.storage.query.Condition;
 import org.traccar.storage.query.Request;
+import org.traccar.model.PositionData;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -66,7 +70,34 @@ public class PositionBatchWriter {
         CompletableFuture<Long> future = new CompletableFuture<>();
         if (queue == null) {
             try {
-                future.complete(storage.addObject(position, INSERT_REQUEST));
+
+               PositionData positionData = new PositionData();
+
+                Position lastpos = storage.getObject(
+                    Position.class,
+                    new Request(
+                        new Columns.All(),
+                        new Condition.LatestPositions(
+                            position.getDeviceId())));
+
+                boolean loc = lastpos == null
+                    || Double.compare(
+                    lastpos.getLatitude(),
+                    position.getLatitude()) != 0
+                    || Double.compare(
+                    lastpos.getLongitude(),
+                    position.getLongitude()) != 0;
+
+
+                if (loc) {
+                    future.complete(storage.addObject(position, INSERT_REQUEST));
+                    storage.addObject(positionData, INSERT_REQUEST);
+                } else {
+                    long id = storage.addObject(positionData, INSERT_REQUEST);
+                    positionData.setPositionId(id);
+                }
+
+
             } catch (StorageException error) {
                 future.completeExceptionally(error);
             }

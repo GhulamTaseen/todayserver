@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog
+            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <!-- 1. tc_positions mein naye columns -->
+    <changeSet author="your-name" id="project-add-position-fields">
+        <addColumn tableName="tc_positions">
+            <column name="battery" type="DOUBLE"/>
+            <column name="power" type="DOUBLE"/>
+            <column name="ignition" type="BOOLEAN"/>
+            <column name="rssi" type="DOUBLE"/>
+            <column name="fuel" type="DOUBLE"/>
+            <column name="distance" type="DOUBLE"/>
+            <column name="totalDistance" type="DOUBLE"/>
+            <column name="hours" type="BIGINT"/>
+        </addColumn>
+    </changeSet>
+
+    <!-- 2. tc_position_data table (PositionData model ke mutabiq: deviceId bhi hai) -->
+    <changeSet author="your-name" id="project-create-position-data">
+        <createTable tableName="tc_position_data">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="positionId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="deviceId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="address" type="VARCHAR(512)"/>
+            <column name="attributes" type="VARCHAR(4000)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="your-name" id="project-position-data-indexes">
+        <createIndex tableName="tc_position_data" indexName="position_data_positionid">
+            <column name="positionId"/>
+        </createIndex>
+        <createIndex tableName="tc_position_data" indexName="position_data_deviceid">
+            <column name="deviceId"/>
+        </createIndex>
+    </changeSet>
+
+
+
+    <!-- 4. Ab purane columns hata dein -->
+    <changeSet author="your-name" id="project-remove-position-data">
+        <dropColumn tableName="tc_positions" columnName="address"/>
+        <dropColumn tableName="tc_positions" columnName="attributes"/>
+    </changeSet>
+
+</databaseChangeLog>
